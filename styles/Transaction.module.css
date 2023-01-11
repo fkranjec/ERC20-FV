@@ -35,3 +35,11 @@
     color: white;
     cursor: pointer;
 }
+
+.heading {
+    margin: 0 auto;
+    width: fit-content;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+}

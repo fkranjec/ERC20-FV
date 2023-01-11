@@ -5,6 +5,7 @@ import Connect from '../components/Connect'
 import Transaction from '../components/Transaction'
 
 export default function Home() {
+  let signedIn: boolean = true;
   return (
     <>
       <Head>
@@ -14,9 +15,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-            <Connect/>
-            <Card/>
-            <Transaction/>
+            {
+                signedIn ? (
+                    <>
+                        <Card/>
+                        <Transaction/>
+                    </>
+                )
+                :
+                <Connect/>
+            }
       </main>
     </>
   )
