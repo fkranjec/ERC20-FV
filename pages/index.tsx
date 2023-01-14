@@ -8,13 +8,21 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
   const [signedIn, setSignedIn] = useState<boolean>(false);
+  const [balance, setBalance] = useState<number>(0);
   let {
     dispatch,
-    state: {status, isMetamaskInstalled, wallet, balance}
+    state: {status, isMetamaskInstalled, wallet},
+    FLDC
     } = useMetamask();
 
+  const getBalance = async(walletId: string) => {
+    let ret = await FLDC.methods.balanceOf(walletId).call();
+    setBalance(ret);
+  }
+
   useEffect(()=>{
-    },[wallet, balance]);
+    if(signedIn) getBalance(wallet? wallet : "");
+  },[wallet]);
 
   let disp:Dispatch = (a:Action) =>{
     dispatch(a);
@@ -33,8 +41,8 @@ export default function Home() {
             {
                 signedIn ? (
                     <>
-                        <Card wallet={wallet ? wallet : ""} eth={balance? balance : ""} eur={"2"}/>
-                        <Transaction/>
+                        <Card wallet={wallet ? wallet : ""} eth={balance} eur={"2"}/>
+                        <Transaction wallet={"0x5B38Da6a701c568545dCfcB03FcB875f56beddC4"}/>
                     </>
                 )
                 :

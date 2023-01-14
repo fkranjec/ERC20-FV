@@ -1,4 +1,7 @@
 import { createContext, useContext, useEffect, useReducer, type PropsWithChildren } from "react";
+import { CONTRACT_ABI, CONTRACT_ADDRESS } from './Blockchain/Blockchain';
+import Web3 from 'web3';
+import {Contract} from 'web3-eth-contract';
 
 export type ConnectAction = { type: "connect"; wallet: string; };
 export type DisconnectAction = { type: "disconnect" };
@@ -27,7 +30,7 @@ export type StateDispatch = {
 }
 
 const MetamaskContext = createContext<{
-    state: State; dispatch: Dispatch
+    state: State; dispatch: Dispatch; FLDC: Contract
     } | undefined>(undefined);
 
 const initialState: State = {
@@ -60,9 +63,12 @@ function metamaskReducer(state: State, action: Action): State {
 
 function MetamaskProvider({children}: PropsWithChildren){
     const [state, dispatch] = useReducer(metamaskReducer, initialState);
-    const value = {state, dispatch};
+    const provider = new Web3.providers.HttpProvider('https://goerli.infura.io/v3/caa94a0fce774247ac2cdb5ed0f4f485')
+    const web3 = new Web3(provider)
+    const FLDC = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
 
-    useEffect(()=>{
+    const value = {state, dispatch, FLDC};
+        useEffect(()=>{
         if( typeof window !== undefined ){
             const ethereumProviderInjected = typeof window.ethereum != "undefined";
 
