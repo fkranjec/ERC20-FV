@@ -1,9 +1,50 @@
+import {useEffect} from 'react'
 import styles from '../styles/Connect.module.css'
+import { Status, Dispatch } from './Metamask'
 
-export default function Connect() {
-    return (
-        <button className={styles.button}>
-            Connect using MetaMask
-        </button>
-    )
+export interface IConnect{
+  status: Status,
+  isMetamaskInstalled: boolean,
+  dispatch: Dispatch
+}
+
+
+export default function Connect({status, isMetamaskInstalled, dispatch}: IConnect) {
+
+    const showInstallMetamask = status !== "pageNotLoaded" && !isMetamaskInstalled;
+    const showConnectButton = status !== "pageNotLoaded" && isMetamaskInstalled;
+
+    useEffect(() => {
+      return () => {
+      }
+    }, [])
+
+    const handleConnect = async () => {
+      dispatch({type: "loading"});
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts"
+      });
+
+      if(accounts.length > 0){
+        dispatch({type: "connect", wallet: accounts[0]})
+      }
+    }
+
+  return (
+      <>
+          { showConnectButton && (
+              <button onClick={handleConnect} className={styles.button}>
+                  Connect using MetaMask
+              </button>
+              )
+          }
+          {
+              showInstallMetamask && (
+                  <a>
+                      Install metamask
+                  </a>
+              )
+          }
+      </>
+  )
 }
