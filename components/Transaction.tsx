@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Provider, useState } from 'react'
 import styles from '../styles/Transaction.module.css'
 import { useMetamask } from './Metamask';
 import {Contract} from 'web3-eth-contract';
@@ -6,18 +6,15 @@ import Web3 from 'web3';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from './Blockchain/Blockchain';
 
 type Transfer = (from:string, to: string, amount: number)=>{}
-
+export interface Wallet {
+  wallet: string
+}
 export default function Transaction(wallet: string) {
     const [walletTo, setWalletTo] = useState<string>("");
 
     let transfer = async(from: string, to: string, amount: number) => {
-      console.log("test");
-      const web3 = new Web3(window.ethereum);
-      const FLDC = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-      let ret = await FLDC.methods.transfer("0x396Ab55f4281A150B08D5b71adB2Eb9EB1DA36F9",  "100").send({from: "0x81fF4ca232b34A26155Ada8ecC4F1100B7ECd718"}).on('receipt', ()=>{console.log("test")});
-      let bal = await FLDC.methods.balanceOf("0x81fF4ca232b34A26155Ada8ecC4F1100B7ECd718").call();
-      console.log(bal)
-      console.log(ret);
+      let w3 = new FLDCProvider(window.ethereum);
+      w3.transfer(from,to,amount).then(balance => console.log(balance))
     }
 
 
@@ -29,4 +26,26 @@ export default function Transaction(wallet: string) {
             <button className={styles.button} onClick={()=>transfer(wallet, walletTo, 100)}>Send eth</button>
         </div>
     )
+}
+
+export class FLDCProvider {
+  private web3:Web3;
+  private FLDC:Contract
+
+  constructor(provider:any) {
+    this.web3 = new Web3(provider);
+    console.log(this.web3)
+    this.FLDC = new this.web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+  }
+
+  public async getBalance(wallet: Wallet): Promise<string> {
+    console.log(wallet)
+    return await this.FLDC.methods.balanceOf(wallet.wallet).call();
+  }
+
+  public async transfer(from:Wallet, to: Wallet, amount: number):Promise<any> {
+    return await this.FLDC.methods.transfer("0x396Ab55f4281A150B08D5b71adB2Eb9EB1DA36F9",amount).send({from: from.wallet})
+  }
+
+
 }
