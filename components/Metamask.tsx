@@ -26,11 +26,11 @@ export type State = {
 
 export type StateDispatch = {
   state: State,
-  dispatch: Dispatch
+  dispatch: Dispatch,
 }
 
 const MetamaskContext = createContext<{
-    state: State; dispatch: Dispatch; FLDC: Contract
+    state: State; dispatch: Dispatch;
     } | undefined>(undefined);
 
 const initialState: State = {
@@ -62,12 +62,10 @@ function metamaskReducer(state: State, action: Action): State {
 }
 
 function MetamaskProvider({children}: PropsWithChildren){
+    //const provider = detectEthereumProvider()
     const [state, dispatch] = useReducer(metamaskReducer, initialState);
-    const provider = new Web3.providers.HttpProvider('https://goerli.infura.io/v3/caa94a0fce774247ac2cdb5ed0f4f485')
-    const web3 = new Web3(provider)
-    const FLDC = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
 
-    const value = {state, dispatch, FLDC};
+    const value = {state, dispatch};
         useEffect(()=>{
         if( typeof window !== undefined ){
             const ethereumProviderInjected = typeof window.ethereum != "undefined";

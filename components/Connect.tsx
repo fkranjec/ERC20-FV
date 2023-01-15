@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 import styles from '../styles/Connect.module.css'
-import { Status, Dispatch } from './Metamask'
+import { Status, Dispatch, useMetamask } from './Metamask'
 
 export interface IConnect{
   status: Status,
@@ -10,7 +10,6 @@ export interface IConnect{
 
 
 export default function Connect({status, isMetamaskInstalled, dispatch}: IConnect) {
-
     const showInstallMetamask = status !== "pageNotLoaded" && !isMetamaskInstalled;
     const showConnectButton = status !== "pageNotLoaded" && isMetamaskInstalled;
 
@@ -24,9 +23,10 @@ export default function Connect({status, isMetamaskInstalled, dispatch}: IConnec
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts"
       });
-
+      console.log(accounts);
       if(accounts.length > 0){
         dispatch({type: "connect", wallet: accounts[0]})
+
       }
     }
 

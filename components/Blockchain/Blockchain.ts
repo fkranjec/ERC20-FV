@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS: string = "0x941d78Ab921DBCca1889070092Cad6022FC28872"
+export const CONTRACT_ADDRESS: string = "0x14e70e90F3F659dBB273011ce2C012AD1d404961"
 export const CONTRACT_ABI: any[] = [
     {
       "constant": true,
