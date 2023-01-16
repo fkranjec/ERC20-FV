@@ -26,7 +26,6 @@ export default function Home() {
 
   const getBalance = (walletId: string) => {
     const FLDC = new FLDCProvider(window.ethereum)
-    console.log("GET BALANCE")
     FLDC.getBalance({ wallet: walletId }).then((balance) => {
       setBalance(parseInt(balance));
     });

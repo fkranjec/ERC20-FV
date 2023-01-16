@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Rings, ThreeDots } from 'react-loader-spinner';
 import styles from '../styles/Transaction.module.css'
 import { FLDCProvider, Wallet } from './Blockchain/Blockchain';
 
@@ -27,8 +28,23 @@ export default function Transaction({ wallet, status, transfer }: ITransaction) 
       <p className={styles.heading} style={{ marginTop: "20px" }}>Send to wallet:</p>
       <input type='text' defaultValue={walletTo.wallet} onChange={(e) => handleInputWallet(e.target.value)} placeholder='Insert wallet address...' className={styles.address_input} />
       <p className={styles.heading}>$FLDC amount:</p>
-      <input min='0.00' step='0.01' defaultValue={amount} onChange={(e) => handleInputAmount(e.target.value != "" ? parseFloat(e.target.value) : 0)} type='number' placeholder='Insert amount...' className={styles.address_input} />
-      <button className={styles.button} disabled={status} onClick={() => transfer(wallet, walletTo, amount)}>Send $FLDC</button>
+      <input min='0.00' step='0.01' defaultValue={amount} onChange={(e) => handleInputAmount(e.target.value != "" ? parseFloat(parseFloat(e.target.value).toFixed(2)) : 0)} type='number' placeholder='Insert amount...' className={styles.address_input} />
+      <button className={styles.button} disabled={status} onClick={() => transfer(wallet, walletTo, amount)}>
+        {
+          status ? (
+            <ThreeDots
+              height='40'
+              width='40'
+              radius='9'
+              wrapperClass={styles.margin}
+              color='white'
+              visible={true}
+            />
+          ):(
+            <p className={styles.margin}>Send $FLDC</p>
+          )
+        }
+      </button>
     </div>
   )
 }

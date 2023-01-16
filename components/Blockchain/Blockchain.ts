@@ -3,7 +3,7 @@ import Web3 from 'web3';
 
 export class FLDCProvider {
   private web3: Web3;
-  private FLDC: Contract
+  private FLDC: Contract;
 
   constructor(provider: any) {
     this.web3 = new Web3(provider);
@@ -15,12 +15,16 @@ export class FLDCProvider {
   }
 
   public async transfer(from: Wallet, to: Wallet, amount: number): Promise<any> {
-    return await this.FLDC.methods.transfer(to.wallet, amount).send({ from: from.wallet })
+    return await this.FLDC.methods.transfer(to.wallet, amount).send({ from: from.wallet });
   }
 
 }
 
-export const CONTRACT_ADDRESS: string = "0x14e70e90F3F659dBB273011ce2C012AD1d404961"
+export interface Wallet {
+  wallet: string
+}
+
+export const CONTRACT_ADDRESS: string = "0x14e70e90F3F659dBB273011ce2C012AD1d404961";
 export const CONTRACT_ABI: any[] = [
   {
     "constant": true,
@@ -382,9 +386,3 @@ export const CONTRACT_ABI: any[] = [
     "type": "function"
   }
 ];
-
-export interface Wallet {
-  wallet: string
-}
-
-
